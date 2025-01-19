@@ -1,3 +1,4 @@
+/* General Body Styling */
 body {
   display: flex;
   justify-content: center;
@@ -7,13 +8,16 @@ body {
   background-color: black;
   color: white;
   font-family: Arial, sans-serif;
+  text-align: center;
 }
 
+/* Styling the Game Canvas */
 canvas {
   border: 1px solid white;
   background-color: #000;
 }
 
+/* Button Styling */
 button {
   margin-top: 10px;
   padding: 10px 20px;
@@ -26,4 +30,39 @@ button {
 
 button:hover {
   background-color: gray;
+}
+
+/* Styling Loading Screen */
+#loadingScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#loadingBarContainer {
+  width: 300px;
+  height: 20px;
+  margin-top: 20px;
+  background-color: #444;
+  border-radius: 5px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#loadingBar {
+  height: 100%;
+  width: 0%;
+  background-color: green;
+  border-radius: 5px;
+  transition: width 0.1s ease-out;
+}
+
+/* Styling for Game Screen */
+#gameScreen {
+  display: none;
+}
+
+p {
+  font-size: 20px;
 }
