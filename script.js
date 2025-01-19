@@ -1,6 +1,10 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const restartButton = document.getElementById('restartButton');
+const loadingScreen = document.getElementById('loadingScreen');
+const gameScreen = document.getElementById('gameScreen');
+const loadingBar = document.getElementById('loadingBar');
+const loadingText = document.getElementById('loadingText');
 const box = 20; // Size of each grid square
 let score = 0;
 
@@ -8,6 +12,8 @@ let snake;
 let food;
 let direction;
 let game;
+
+const eatSound = new Audio('eat_sound.mp3'); // Assuming the sound file is named 'eat_sound.mp3'
 
 function resetGame() {
   score = 0;
@@ -25,7 +31,24 @@ function resetGame() {
   game = setInterval(draw, 100);
 }
 
-resetGame();
+// Start the loading screen and the progress bar
+let progress = 0;
+function startGame() {
+  const progressInterval = setInterval(() => {
+    progress += 1;
+    loadingBar.style.width = progress + '%';
+    if (progress >= 100) {
+      clearInterval(progressInterval);
+      setTimeout(() => {
+        loadingScreen.style.display = "none";  // Hide loading screen
+        gameScreen.style.display = "block";    // Show game screen
+        resetGame(); // Initialize the game
+      }, 500); // Small delay after loading bar reaches 100%
+    }
+  }, 50); // Bar updates every 50 ms
+}
+
+startGame();
 
 restartButton.addEventListener('click', resetGame);
 
@@ -39,10 +62,10 @@ function changeDirection(event) {
 }
 
 function draw() {
-  // Clear canvas
+  // Clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Draw snake
+  // Draw the snake
   snake.forEach((segment, index) => {
     ctx.fillStyle = index === 0 ? 'lime' : 'green';
     ctx.fillRect(segment.x, segment.y, box, box);
@@ -50,7 +73,7 @@ function draw() {
     ctx.strokeRect(segment.x, segment.y, box, box);
   });
 
-  // Draw food
+  // Draw the food
   ctx.fillStyle = 'red';
   ctx.fillRect(food.x, food.y, box, box);
 
@@ -67,6 +90,7 @@ function draw() {
   if (snakeX === food.x && snakeY === food.y) {
     score++;
     document.getElementById('score').textContent = 'Score: ' + score;
+    eatSound.play(); // Play sound when snake eats food
     food = {
       x: Math.floor(Math.random() * (canvas.width / box)) * box,
       y: Math.floor(Math.random() * (canvas.height / box)) * box
@@ -76,7 +100,7 @@ function draw() {
     snake.pop();
   }
 
-  // Add new head
+  // Add a new head
   const newHead = { x: snakeX, y: snakeY };
 
   // Game over conditions
